@@ -1,0 +1,10 @@
+export const sub_viewersid = 0;
+export const sub_customersid = 1;
+export const sub_login = 2;
+export const sub_portal = 3;
+export const sub_dealerid = 4;
+export const sub_dealer = 5;
+export const sub_productid = 6;
+export const sub_product = 7;
+export const sub_subscribed_at = 8;
+export const sub_cancelled_at = 9;
