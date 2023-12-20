@@ -74,7 +74,6 @@ export async function writeProgramadorasReportMaxiTV(dealerData) {
         worksheetAllCustomers.column(2).setWidth(20);
         worksheetAllCustomers.column(3).setWidth(25);
         worksheetAllCustomers.column(4).setWidth(25);
-        worksheetAllCustomers.column(5).setWidth(20);
 
         worksheetAllCustomers.row(2).filter();
         for (let i = 0; i < headerCustomers.length; i++) {
@@ -85,18 +84,29 @@ export async function writeProgramadorasReportMaxiTV(dealerData) {
         }
 
         let rowIndex = 0;
+        let maxLengthchecker = 0;
+        const EXCEL_UNITS_TRANSFORM = 0.9;
         for (const dealer of dealerData) {
             for (const customer of dealer.customers) {
-                const products = customer.products.reduce((previ, curr) => {
-                    previ += curr + ', ';
-                }, '');
+                let products = '';
+                for (const product of customer.products) {
+                    if (!products.includes(product)) {
+                        products += `${product} : `;
+                    }
+                }
+                if (maxLengthchecker < products.length) {
+                    maxLengthchecker = products.length;
+                    worksheetAllCustomers
+                        .column(5)
+                        .setWidth(maxLengthchecker * EXCEL_UNITS_TRANSFORM);
+                }
                 worksheetAllCustomers
                     .cell(rowIndex + 3, 2)
                     .string(dealer.dealerName)
                     .style(ExcelStyles.dataStyle);
                 worksheetAllCustomers
                     .cell(rowIndex + 3, 3)
-                    .string(customer.viewersId)
+                    .number(customer.viewersId)
                     .style(ExcelStyles.dataStyle);
                 worksheetAllCustomers
                     .cell(rowIndex + 3, 4)
@@ -104,7 +114,7 @@ export async function writeProgramadorasReportMaxiTV(dealerData) {
                     .style(ExcelStyles.dataStyle);
                 worksheetAllCustomers
                     .cell(rowIndex + 3, 5)
-                    .date(products)
+                    .string(products)
                     .style(ExcelStyles.dataStyle);
                 rowIndex++;
             }
